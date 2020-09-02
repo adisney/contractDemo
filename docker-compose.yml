@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  open-ethereum:
+    build: .docker/open-ethereum
+    command:
+      --chain /home/openethereum/spec.json
+      --author '0xa44f8cce3611ca899e7737d59705f6b42dd63d9e'
+      --unlock '0xa44f8cce3611ca899e7737d59705f6b42dd63d9e'
+      --engine-signer '0x721edccd5119ea744e389e64ce432b80f5f4d2aa'
+      --password /home/openethereum/password
+      --jsonrpc-apis all
+      --jsonrpc-hosts all
+      --jsonrpc-interface '0.0.0.0'
+      --ws-interface '0.0.0.0'
+      --ws-apis all
+      --ws-hosts all
+      --max-peers 0
+      --no-discovery
+      --tracing on
+    ports:
+      - 8545:8545
+      - 8546:8546
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379

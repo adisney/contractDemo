@@ -1,0 +1,29 @@
+{
+  "name": "contract-shotgun",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Alex Disney <alex.disney@uphold.com>",
+  "license": "SEE LICENSE",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "config": "^3.3.1",
+    "ethereumjs-tx": "^2.1.2",
+    "ethereumjs-util": "^7.0.4",
+    "lodash": "^4.17.19",
+    "web3": "^1.2.9"
+  },
+  "private": true,
+  "scripts": {
+    "lint": "eslint --cache . $@",
+    "test": "jest --config jest-config.json"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.4.0",
+    "prettier": "^2.0.5"
+  }
+}

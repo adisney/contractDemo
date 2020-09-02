@@ -1,0 +1,111 @@
+{
+  "accounts": {
+    "0x0000000000000000000000000000000000000001": {
+      "balance": "1",
+      "builtin": {
+        "name": "ecrecover",
+        "pricing": {
+          "linear": {
+            "base": 3000,
+            "word": 0
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000002": {
+      "balance": "1",
+      "builtin": {
+        "name": "sha256",
+        "pricing": {
+          "linear": {
+            "base": 60,
+            "word": 12
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000003": {
+      "balance": "1",
+      "builtin": {
+        "name": "ripemd160",
+        "pricing": {
+          "linear": {
+            "base": 600,
+            "word": 120
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000004": {
+      "balance": "1",
+      "builtin": {
+        "name": "identity",
+        "pricing": {
+          "linear": {
+            "base": 15,
+            "word": 3
+          }
+        }
+      }
+    },
+    "0xa44f8cce3611ca899e7737d59705f6b42dd63d9e": {
+      "balance": "1000000000000000000000"
+    },
+    "0x0000000000000000000000000000000000000b4d": {
+      "balance": "0",
+      "constructor": "0x6060604052346000575b60148060156000396000f360606040525b3460005760125b6000565b565b00"
+    },
+    "0x000000000000000000000000000000000000600d": {
+      "balance": "0",
+      "constructor": "0x60606040523415600e57600080fd5b5b603980601c6000396000f30060606040525b600b5b5b565b0000a165627a7a723058202a42c1ea68d105c975abdcdde0a88b2773c5621d483e3358292f372837f742b00029"
+    },
+    "0x0000000000000000000000000000000000000005": {
+      "balance": "0",
+      "constructor": "0x608060405234801561001057600080fd5b50610324806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80633de4eb171461004657806343ae80d31461008c5780638588b2c5146100fa575b600080fd5b61004e61013c565b6040518082601060200280838360005b8381101561007957808201518184015260208101905061005e565b5050505090500191505060405180910390f35b6100b8600480360360208110156100a257600080fd5b81019080803590602001909291905050506101bd565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101266004803603602081101561011057600080fd5b81019080803590602001909291905050506101f0565b6040518082815260200191505060405180910390f35b6101446102cc565b60006010806020026040519081016040528092919082601080156101b3576020028201915b8160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019060010190808311610169575b5050505050905090565b600081601081106101ca57fe5b016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008082101580156102035750600f8211155b61020c57600080fd5b336000836010811061021a57fe5b0160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507f77f4e3ee2ec43956216e41e0c47c90850efcbe8e830c760a5e218aaf91cd9f9d8233604051808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060405180910390a1819050919050565b60405180610200016040528060109060208202803883398082019150509050509056fea265627a7a72315820ecef2a0ceff62e3a874b8fc103bd36e47c755e34baff1eb80f7d29c66856d5bd64736f6c634300050f0032"
+    }
+  },
+  "engine": {
+    "authorityRound": {
+      "params": {
+        "stepDuration": "5",
+        "validators" : {
+          "list": ["0x721edccd5119ea744e389e64ce432b80f5f4d2aa"]
+        }
+      }
+    }
+  },
+  "genesis": {
+    "seal": {
+      "authorityRound": {
+        "step": "0x0",
+        "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "difficulty": "0x20000",
+    "gasLimit": "0x5B8D80",
+    "extraData": "0x",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "0x00"
+  },
+  "name": "Shotgun Demo",
+  "params": {
+    "accountStartNonce": "0x0",
+    "eip140Transition": "0x0",
+    "eip150Transition": "0x0",
+    "eip155Transition": "0x0",
+    "eip160Transition": "0x0",
+    "eip161abcTransition": "0x0",
+    "eip161dTransition": "0x0",
+    "eip211Transition": "0x0",
+    "eip214Transition": "0x0",
+    "eip658Transition": "0x0",
+    "eip98Transition": "0xffffffffffffffff",
+    "eip145Transition": "0x0",
+    "eip1014Transition": "0x0",
+    "eip1052Transition": "0x0",
+    "gasLimitBoundDivisor": "0x0400",
+    "maximumExtraDataSize": "0x20",
+    "minGasLimit": "0x1388",
+    "networkID": "0x11"
+  }
+}
