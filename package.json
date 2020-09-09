@@ -20,11 +20,16 @@
   },
   "devDependencies": {
     "@nomiclabs/buidler": "^1.4.5",
+    "@nomiclabs/buidler-ethers": "^2.0.0",
+    "@nomiclabs/buidler-waffle": "^2.1.0",
     "babel-eslint": "^10.1.0",
+    "chai": "^4.2.0",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "ethereum-waffle": "^3.1.0",
+    "ethers": "^5.0.12",
     "jest": "^26.4.0",
     "prettier": "^2.0.5",
     "solium": "^1.2.5"

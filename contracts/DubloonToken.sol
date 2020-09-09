@@ -5,14 +5,14 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 
 /**
- * @title MoneyToken
- * @dev This is straight CASH.
+ * @title DubloonToken
+ * @dev Worth its weight in gold.
  */
-contract MoneyToken is ERC20 {
+contract DubloonToken is ERC20 {
     /**
      * @dev Constructor that gives msg.sender all of existing tokens.
      */
-    constructor() public ERC20("MoneyToken", "CASH") {
+    constructor() public ERC20("DubloonToken", "GOLD") {
         _mint(msg.sender, 1000000000);
     }
 }
