@@ -1,0 +1,28 @@
+Intro buidler, ethers, waffle
+
+buidler
+testing
+  - javascript async/await - briefly
+  - Test MoneyToken
+  - signers
+assert/require/revert
+inheritance
+modifiers
+  - Ownable
+  - Access
+
+
+MoneyToken
+DubloonToken
+TreasureChest
+  - Test treasure chest
+Wallet
+  - Test permissioning
+  - Other test runthrough
+  - Test invoke
+    - POINT OUT THAT THE REASON THIS IS HERE IS TO IMPLEMENT THE SHOTGUN APPROACH WE LEARNED ABOUT
+
+
+Deployment
+  - deploy.js
+Examples in the console

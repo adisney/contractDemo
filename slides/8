@@ -1,0 +1,8 @@
+If we want to compete on high value liquidations, invoking a smart contract function on another contract is how we would do it.
+
+- Deploy a ShotGun contract
+- Fund it with either the tokens or ETH needed
+- Watch for liquidation opportunities
+- When found, have many different Ethereum accounts call a ShotGun.trigger() function
+- ShotGun receives all the invocations and calls the `liquidate` method
+- The first transaction mined after the liquidation event is the winner.

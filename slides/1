@@ -1,0 +1,8 @@
+When developing smart contracts, there are a few toolsets you can use to ease the pain (it hurts bad) of blockchain interaction.
+
+The toolset we are going to use today is:
+- ethers (https://github.com/ethers-io/ethers.js#readme) for blockchain interaction
+- Waffle (https://getwaffle.io/) for testing
+- OpenZeppelin (https://docs.openzeppelin.com/contracts/3.x/) for high quality smart contract implementations to inherit from
+- Buidler (https://buidler.dev/) as a framework to tie everything together
+     ^---- This is not a typo

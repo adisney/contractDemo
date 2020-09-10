@@ -1,82 +1,140 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
-const child_process = require('child_process');
-const fs = require('fs');
-const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8546"));
+const colors = require('colors');
 
 /**
- * Constants.
+ * Deploy MoneyToken.
  */
 
-const fromAddress = "0xa44f8cce3611ca899e7737d59705f6b42dd63d9e";
+async function deployMoneyToken() {
+  console.log('Beginning deployment of MoneyToken...');
 
-/**
- * Deploy the contract.
- */
+  const MoneyToken = await ethers.getContractFactory('MoneyToken');
+  const moneyToken = await MoneyToken.deploy();
 
-async function deployContract(transaction, gasAmount) {
-  function deploy(done, error) {
-    transaction
-      .send({
-        from: fromAddress,
-        gas: gasAmount
-      })
-      .on('transactionHash', function(hash) {
-        console.log("Contract deployment transaction hash: " + hash);
-      })
-      .on('receipt', function(receipt) {
-        const contractAddress = receipt.contractAddress;
-        console.log("Transaction mined. Contract is located at address: " + contractAddress);
-        console.log('');
+  await moneyToken.deployed();
+  console.log(`MoneyToken deployed at ${moneyToken.address}`.yellow);
+  console.log('');
 
-        done(contractAddress);
-      })
-      .on('error', function(error, receipt) {
-        console.error(error);
-        if (receipt) {
-          console.error("Transaction receipt:");
-          console.error(receipt);
-        }
-
-        error();
-      });
-  }
-
-  return new Promise(deploy);
+  return moneyToken;
 }
 
 /**
- * Get the ABI and deploy the function
+ * Deploy Wallet contract;
+ */
+
+async function deployWallet(captain, pirate1, pirate2) {
+  console.log('Beginning deployment of the Wallet...');
+
+  const Wallet = await ethers.getContractFactory('Wallet');
+  // Deploy the wallet with the list of permitted addresses.
+  const wallet = await Wallet.deploy([captain, pirate1, pirate2]);
+
+  await wallet.deployed();
+  console.log(`Wallet deployed at ${wallet.address}`.yellow);
+  console.log('');
+
+  return wallet;
+}
+
+/**
+ * Deploy free real estate.
+ */
+
+async function deployDoubloonToken() {
+  console.log('Beginning deployment of the Spanish Doubloon...');
+
+  const DoubloonToken = await ethers.getContractFactory('DoubloonToken');
+  const doubloonToken = await doubloonToken.deploy();
+
+  await doubloonToken.deployed();
+  console.log(`DoubloonToken deployed at ${doubloonToken.address}`.yellow);
+  console.log('');
+
+  return doubloonToken;
+}
+
+/**
+ * Deploy TreasureChest contract.
+ */
+
+async function deployTreasureChest() {
+  console.log('Beginning deployment of the TreasureChest...');
+
+  // Ensure doubloonToken to definitely deployed so we can get the `address` of it.
+  const TreasureChest = await ethers.getContractFactory('TreasureChest');
+  // Deploy the treasure chest and tell it to hold Spanish Doubloons.
+  const treasureChest = await TreasureChest.deploy(moneyToken.address);
+
+  await treasureChest.deployed();
+  console.log(`TreasureChest deployed at ${treasureChest.address}`.yellow);
+  console.log('');
+
+  return treasureChest;
+}
+
+/**
+ * Deploy the pirate contracts.
  */
 
 async function main() {
-  const { abi, bytecode } = JSON.parse(fs.readFileSync('./artifacts/MoneyToken.json', 'utf8'));
-  const MoneyTokenContract = new web3.eth.Contract(abi, null, {from: fromAddress});
+  const accounts = await ethers.provider.listAccounts();
+  const [ captain, pirate1, pirate2, cabinBoy ] = accounts;
+  console.log('');
 
-  const transaction = MoneyTokenContract.deploy({data: bytecode});
-  const gasEstimate = await transaction.estimateGas()
+  const moneyToken = await deployMoneyToken();
+  const wallet = await deployWallet(captain, pirate1, pirate2);
+  const doubloonToken = await deployDoubloonToken();
+  const treasureChest = await deployTreasureChest(moneyToken);
 
-  const deployedAddress = await deployContract(transaction, gasEstimate);
-  MoneyTokenContract.options.address = deployedAddress;
+  console.log('*******************'.blue);
+  console.log('Deployment complete'.blue);
+  console.log('*******************'.blue);
 
-  const balance = await MoneyTokenContract.methods.balanceOf(fromAddress).call()
-  console.log(`Minted ${balance} ${await MoneyTokenContract.methods.symbol().call()} tokens at deployer address (${fromAddress})`);
+  console.log('');
+  console.log(`Minted ${(await moneyToken.balanceOf(captain)).toString().green} MoneyTokens (${('symbol: ' + (await moneyToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
+  console.log(`Minted ${(await doubloonToken.balanceOf(captain)).toString().green} DoubloonTokens (${('symbol: ' + (await doubloonToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
+
+  initConsoleScript(moneyToken.address, wallet.address, doubloonToken.address, treasureChest.address);
 }
+
+/**
+ * Output an executable slice of code for use in a buidler console.
+ */
+
+function initConsoleScript(moneyTokenAddress, walletAddress, doubloonTokenAddress, treasureChestAddress) {
+  console.log('');
+  console.log('**************************************************************'.green);
+  console.log('Copy/paste this code into a console to initialize your session'.green);
+  console.log('**************************************************************'.green);
+  console.log(`
+[captain, pirate1, pirate2, cabinBoy] = await ethers.provider.listAccounts();
+[captainSigner, pirate1Signer, pirate2Signer, cabinBoySigner] = await ethers.getSigners();
+MoneyToken = await ethers.getContractFactory('MoneyToken')
+moneyToken = await MoneyToken.attach('${moneyTokenAddress}');
+Wallet = await ethers.getContractFactory('Wallet')
+wallet = await Wallet.attach('${walletAddress}');
+DoubloonToken = await ethers.getContractFactory('DoubloonToken')
+doubloonToken = await DoubloonToken.attach('${doubloonTokenAddress}');
+TreasureChest = await ethers.getContractFactory('TreasureChest')
+treasureChest = await TreasureChest.attach('${treasureChestAddress}');
+  `)
+  console.log('**************************************************************'.green);
+  console.log('Copy/paste this code into a console to initialize your session'.green);
+  console.log('**************************************************************'.green);
+}
+
+/**
+ * Run the program.
+ */
 
 main()
 .then(() => {
   console.log('');
-  console.log('Contract deployment successful');
-
-  web3.eth.currentProvider.connection.close();
+  console.log('Contract deployment successful'.yellow);
 })
 .catch(error => {
-  console.log('There was an error deploying the contract');
+  console.log('There was an error deploying the contract'.red);
   console.log('error', error);
 });
 

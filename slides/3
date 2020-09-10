@@ -1,0 +1,7 @@
+ethers can be used to:
+  - Query or write to the blockchain
+    - Supports local dev chains and mainnet/test chains
+    - native support for providers like Infura
+  - Instantiate and interact with smart contracts in code
+    - Interface is less verbose and more `async/await` friendly than web3
+  - Sign messages using your private key

@@ -1,0 +1,45 @@
+Buidler provides a suite of tooling to:
+  - Run dev and test nodes
+    - Runs a modified version of the Ethereum EVM augmented with some friendly logging capabilities
+      - `console.log` inside of a smart contract!
+  - Compile smart contracts
+    - Can flatten all imported contracts into one file for easy upload to Etherscan
+  - Run tests
+  - Deploy contracts
+    - Supports any network you can specify
+
+
+------------------------------------------------------------------------------------
+
+```
+❯ buidler --help
+Buidler version 1.4.5
+
+Usage: buidler [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]
+
+GLOBAL OPTIONS:
+
+  --config           	A Buidler config file.
+  --emoji            	Use emoji in messages.
+  --help             	Shows this message, or a task's help if its name is provided
+  --max-memory       	The maximum amount of memory that Buidler can use.
+  --network          	The network to connect to.
+  --show-stack-traces	Show stack traces.
+  --verbose          	Enables Buidler verbose logging
+  --version          	Shows buidler's version.
+
+
+AVAILABLE TASKS:
+
+  accounts	Prints the list of accounts
+  clean   	Clears the cache and deletes all artifacts
+  compile 	Compiles the entire project, building all artifacts
+  console 	Opens a buidler console
+  flatten 	Flattens and prints all contracts and their dependencies
+  help    	Prints this message
+  node    	Starts a JSON-RPC server on top of Buidler EVM
+  run     	Runs a user-defined script after compiling the project
+  test    	Runs mocha tests
+
+To get help for a specific task run: npx buidler help [task]
+```

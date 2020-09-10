@@ -3,13 +3,12 @@ const { expect } = require("chai");
 describe("TreasureChest", function() {
   let moneyToken;
   let treasureChest;
-  let owner;
-  let addr1;
-  let addr2;
-  let addr3;
+  let captain;
+  let pirate1;
+  let cabinBoy
 
   beforeEach(async () => {
-    [ owner, addr1, addr2, addr3 ] = await ethers.provider.listAccounts();
+    [ captain, pirate1, cabinBoy ] = await ethers.provider.listAccounts();
 
     const MoneyToken = await ethers.getContractFactory("MoneyToken");
     moneyToken = await MoneyToken.deploy();
@@ -20,36 +19,45 @@ describe("TreasureChest", function() {
     await treasureChest.deployed();
   });
 
-  it('should set the `tokenContained`', async () => {
-    expect(await treasureChest.tokenContained()).to.equal(moneyToken.address);
+  describe('initialization', () => {
+    it('should set the `tokenContained`', async () => {
+      expect(await treasureChest.tokenContained()).to.equal(moneyToken.address);
+    });
+
+    it('should be buried initially', async () => {
+      expect(await treasureChest.buried()).to.equal(true);
+    });
   });
 
-  it('should be buried initially', async () => {
-    expect(await treasureChest.buried()).to.equal(true);
+  describe('unbury', () => {
+    it('should unbury', async () => {
+      await treasureChest.unbury();
+
+      expect(await treasureChest.buried()).to.equal(false);
+    });
+
+    it('should revert if a non-captain tries to dig up the chest');
   });
 
-  it('should unbury', async () => {
-    await treasureChest.unbury();
+  describe.skip('open', () => {
+    it('should revert if still buried', async () => {
+      await expect(treasureChest.open()).to.be.revertedWith('VM Exception while processing transaction: revert treasure chest has not been found yet');
+    });
 
-    expect(await treasureChest.buried()).to.equal(false);
-  });
+    it('should revert when treasure balance is zero', async () => {
+      await treasureChest.unbury();
 
-  it('should revert when treasure balance is zero', async () => {
-    try {
-      await treasureChest.open();
+      await expect(treasureChest.open()).to.be.revertedWith('VM Exception while processing transaction: revert treasure chest is empty');
+    });
 
-      fail();
-    } catch (error) {
-      expect(error.message).to.equal('VM Exception while processing transaction: revert treasure chest is empty');
-    }
-  });
+    it('should transfer the treasure to `msg.sender`', async () => {
+      await moneyToken.transfer(treasureChest.address, 1000);
+      const [, pirate1Signer] = await ethers.getSigners();
 
-  it('should transfer the treasure to `msg.sender`', async () => {
-    await moneyToken.transfer(treasureChest.address, 1000);
+      await treasureChest.unbury();
+      await treasureChest.connect(pirate1Signer).open();
 
-    const [, addr1Signer] = await ethers.getSigners();
-    await treasureChest.connect(addr1Signer).open();
-
-    expect(await moneyToken.balanceOf(addr1)).to.equal(1000);
+      expect(await moneyToken.balanceOf(pirate1)).to.equal(1000);
+    });
   });
 });

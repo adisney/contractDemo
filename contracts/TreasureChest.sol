@@ -2,13 +2,14 @@ pragma solidity ^0.6.2;
 
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@nomiclabs/buidler/console.sol";
 
 /**
  * @title TreasureChest
  * @dev Funds are locked until the chest is opened, then it's free real estate.
  */
-contract TreasureChest {
+contract TreasureChest is Ownable {
     using Address for address;
 
     bool _buried = true;
@@ -22,7 +23,8 @@ contract TreasureChest {
         return _tokenContained;
     }
 
-    function unbury() public {
+    // TODO allow anyone with the secret map to unbury
+    function unbury() public onlyOwner {
         _buried = false;
     }
 
@@ -31,6 +33,7 @@ contract TreasureChest {
     }
 
     function open() public {
+        require(buried() == false, "treasure chest has not been found yet");
         require(_tokenContained.balanceOf(address(this)) > 0, "treasure chest is empty");
 
         _tokenContained.transfer(msg.sender, _tokenContained.balanceOf(address(this)));

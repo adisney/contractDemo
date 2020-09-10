@@ -1,0 +1,9 @@
+OpenZeppelin does smart contract audits and has produced the most widely used smart contract libraries in the industry.
+
+Some libraries include:
+  - Token spec implementations (ERC20, ERC721, etc)
+  - Function permissioning
+    - On the public blockchain anyone can try to execute your smart contract's functions
+  - Safe math functions
+  - Proxy gas fee contracts
+  - Crowdsale frameworks

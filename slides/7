@@ -1,0 +1,24 @@
+Smart contracts can make calls into other smart contracts, just a like a user can.
+
+If your contract knows the target contract's ABI, then it can instantiate it and call the function directly.
+
+If not, you have to encode the call as a hex string and pass the data in to special functions on an `address` primitive.
+
+```solidity
+const address = "0xfooBarAddressIsASmartContract";
+const data = "0xEncodedCallData";
+
+address.call(data);
+address.delegatecall(data);
+```
+
+There are two primary methods used to call into other contracts without direct
+- `call`
+  - Calls a functions from the context of the contract
+- `delegatecall`
+  - Calls function from the context of the caller, HOWEVER...
+  - `delegatecall` basically says that I'm a contract and I'm allowing (delegating) you to do whatever you want to my storage.
+    - In other words...
+      - You can't invoke an arbitrary smart contract function without knowing what it will try to do
+      - `delegatecall` will have it operating in THE CALLER's memory space, not its own.
+    - https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall/3672#3672

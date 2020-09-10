@@ -1,0 +1,12 @@
+Waffle is a testing framework build on top of the JavaScript testing framework `chai`.
+
+It provides:
+ - Testing matchers to simply writing test assertions
+ - Fixture loading
+ - Custom compilation options
+ - Mocking of smart contracts
+ - Support for TypeScript
+
+
+
+The examples that follow don't use much of Waffle's capabilities, but it is undeniably a powerful and useful tool.
