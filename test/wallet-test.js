@@ -10,17 +10,38 @@ describe("Wallet", function() {
   let cabinBoy;
 
   beforeEach(async () => {
+    [ captain, pirate1, pirate2, cabinBoy ] = await ethers.provider.listAccounts();
+
+    const MoneyToken = await ethers.getContractFactory("MoneyToken");
+    moneyToken = await MoneyToken.deploy();
+    moneyTokenAddress = moneyToken.address;
+
+    const Wallet = await ethers.getContractFactory("Wallet");
+    wallet = await Wallet.deploy([captain, pirate1, pirate2]);
+
+    await wallet.deployed();
+
+    await moneyToken.approve(wallet.address, 100);
+    await wallet.deposit(moneyTokenAddress, 100)
   });
 
   describe('Permissioned inheritance', () => {
-    it('should set captain as admin');
+    it('should set captain as admin', async () => {
+      expect(await wallet.isAdmin(captain)).to.be.true;
+    });
 
-    it('should set captain, pirate1 and pirate2 as permitted');
+    it('should set captain, pirate1 and pirate2 as permitted', async () => {
+      expect(await wallet.isPermitted(captain)).to.be.true;
+      expect(await wallet.isPermitted(pirate1)).to.be.true;
+      expect(await wallet.isPermitted(pirate2)).to.be.true;
+    });
 
-    it('should not set cabinBoy as permitted');
+    it('should not set cabinBoy as permitted', async () => {
+      expect(await wallet.isPermitted(cabinBoy)).to.be.false;
+    });
   });
 
-  describe.skip('balanceOf', () => {
+  describe('balanceOf', () => {
     it('should get balance of `tokenAddress` for `holder`', async () => {
       expect(await wallet.balanceOf(captain, moneyTokenAddress)).to.equal(100);
       expect(await wallet.balanceOf(pirate1, moneyTokenAddress)).to.equal(0);
@@ -36,7 +57,7 @@ describe("Wallet", function() {
     });
   });
 
-  describe.skip('deposit', () => {
+  describe('deposit', () => {
     it('should revert if insufficient allowance', async () => {
       await expect(
         wallet.deposit(moneyTokenAddress, 100))
@@ -64,7 +85,7 @@ describe("Wallet", function() {
     });
   });
 
-  describe.skip('withdraw', () => {
+  describe('withdraw', () => {
     let pirate1Signer;
     let pirate1Wallet;
 
@@ -89,7 +110,7 @@ describe("Wallet", function() {
     });
   });
 
-  describe.skip('transfer', () => {
+  describe('transfer', () => {
     let pirate1Signer;
     let pirate1Wallet;
 
@@ -114,15 +135,57 @@ describe("Wallet", function() {
     });
   });
 
-  describe.skip('invoke', () => {
+  describe('invoke', () => {
     let doubloonToken;
     let treasureChest;
 
     beforeEach(async () => {
+      const DoubloonToken = await ethers.getContractFactory("DoubloonToken");
+      doubloonToken = await DoubloonToken.deploy();
+
+      const TreasureChest = await ethers.getContractFactory("TreasureChest");
+      treasureChest = await TreasureChest.deploy(doubloonToken.address);
+      await treasureChest.deployed();
+
+      // Fill the treasure chest
+      await doubloonToken.transfer(treasureChest.address, 75);
+      // Verify the treasure chest is filled
+      expect(await doubloonToken.balanceOf(treasureChest.address)).to.equal(75);
+
+      // X marks the spot
+      await treasureChest.unbury();
     });
 
-    it('should revert if not permitted');
+    it('should revert if not permitted', async () => {
+      // Prepare the function call encoded as hex string
+      const abi = ["function open()"];
+      const iface = new ethers.utils.Interface(abi);
+      const data = iface.encodeFunctionData("open", [])
 
-    it('should call function on target contract');
+      // Have addr1 open the chest and reap the rewards
+      const [, , , notPermittedSigner] = await ethers.getSigners();
+
+      try {
+        await wallet.connect(notPermittedSigner).invokeContractFunction(treasureChest.address, data);
+      } catch (error) {
+        expect(error.message).to.equal('VM Exception while processing transaction: revert not a permitted address');
+      }
+    });
+
+    it('should call function on address', async () => {
+      // Prepare the function call encoded as hex string
+      const abi = ["function open()"];
+      const iface = new ethers.utils.Interface(abi);
+      const data = iface.encodeFunctionData("open", [])
+
+      // Have addr1 open the chest and reap the rewards
+      const [, addr1Signer] = await ethers.getSigners();
+      await wallet.connect(addr1Signer).invokeContractFunction(treasureChest.address, data);
+
+      // Treasure chest should be empty
+      expect(await doubloonToken.balanceOf(treasureChest.address)).to.equal(0);
+      // Rewarded funds live in the wallet
+      expect(await doubloonToken.balanceOf(wallet.address)).to.equal(75);
+    });
   });
 });

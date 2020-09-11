@@ -45,7 +45,7 @@ async function deployDoubloonToken() {
   console.log('Beginning deployment of the Spanish Doubloon...');
 
   const DoubloonToken = await ethers.getContractFactory('DoubloonToken');
-  const doubloonToken = await doubloonToken.deploy();
+  const doubloonToken = await DoubloonToken.deploy();
 
   await doubloonToken.deployed();
   console.log(`DoubloonToken deployed at ${doubloonToken.address}`.yellow);
@@ -58,44 +58,19 @@ async function deployDoubloonToken() {
  * Deploy TreasureChest contract.
  */
 
-async function deployTreasureChest() {
+async function deployTreasureChest(doubloonToken) {
   console.log('Beginning deployment of the TreasureChest...');
 
   // Ensure doubloonToken to definitely deployed so we can get the `address` of it.
   const TreasureChest = await ethers.getContractFactory('TreasureChest');
   // Deploy the treasure chest and tell it to hold Spanish Doubloons.
-  const treasureChest = await TreasureChest.deploy(moneyToken.address);
+  const treasureChest = await TreasureChest.deploy(doubloonToken.address);
 
   await treasureChest.deployed();
   console.log(`TreasureChest deployed at ${treasureChest.address}`.yellow);
   console.log('');
 
   return treasureChest;
-}
-
-/**
- * Deploy the pirate contracts.
- */
-
-async function main() {
-  const accounts = await ethers.provider.listAccounts();
-  const [ captain, pirate1, pirate2, cabinBoy ] = accounts;
-  console.log('');
-
-  const moneyToken = await deployMoneyToken();
-  const wallet = await deployWallet(captain, pirate1, pirate2);
-  const doubloonToken = await deployDoubloonToken();
-  const treasureChest = await deployTreasureChest(moneyToken);
-
-  console.log('*******************'.blue);
-  console.log('Deployment complete'.blue);
-  console.log('*******************'.blue);
-
-  console.log('');
-  console.log(`Minted ${(await moneyToken.balanceOf(captain)).toString().green} MoneyTokens (${('symbol: ' + (await moneyToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
-  console.log(`Minted ${(await doubloonToken.balanceOf(captain)).toString().green} DoubloonTokens (${('symbol: ' + (await doubloonToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
-
-  initConsoleScript(moneyToken.address, wallet.address, doubloonToken.address, treasureChest.address);
 }
 
 /**
@@ -122,6 +97,31 @@ treasureChest = await TreasureChest.attach('${treasureChestAddress}');
   console.log('**************************************************************'.green);
   console.log('Copy/paste this code into a console to initialize your session'.green);
   console.log('**************************************************************'.green);
+}
+
+/**
+ * Deploy the pirate contracts.
+ */
+
+async function main() {
+  const accounts = await ethers.provider.listAccounts();
+  const [ captain, pirate1, pirate2, cabinBoy ] = accounts;
+  console.log('');
+
+  const moneyToken = await deployMoneyToken();
+  const wallet = await deployWallet(captain, pirate1, pirate2);
+  const doubloonToken = await deployDoubloonToken();
+  const treasureChest = await deployTreasureChest(doubloonToken);
+
+  console.log('*******************'.blue);
+  console.log('Deployment complete'.blue);
+  console.log('*******************'.blue);
+
+  console.log('');
+  console.log(`Minted ${(await moneyToken.balanceOf(captain)).toString().green} MoneyTokens (${('symbol: ' + (await moneyToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
+  console.log(`Minted ${(await doubloonToken.balanceOf(captain)).toString().green} DoubloonTokens (${('symbol: ' + (await doubloonToken.symbol()).toString()).yellow}) tokens for the captain (${captain.blue})`);
+
+  initConsoleScript(moneyToken.address, wallet.address, doubloonToken.address, treasureChest.address);
 }
 
 /**

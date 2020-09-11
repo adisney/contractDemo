@@ -6,4 +6,5 @@ Some libraries include:
     - On the public blockchain anyone can try to execute your smart contract's functions
   - Safe math functions
   - Proxy gas fee contracts
+     - I'll pay for your gas
   - Crowdsale frameworks

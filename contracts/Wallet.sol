@@ -87,6 +87,6 @@ contract Wallet is Permissioned {
     /// @dev Function name and arguments are encoded in the `data` field.
     /// @dev `msg.sender` is the wallet.
     function invokeContractFunction(address contractAddress, bytes memory data) public {
-      // TODO
+        contractAddress.functionCall(data);
     }
 }

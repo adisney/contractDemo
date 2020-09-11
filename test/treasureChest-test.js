@@ -36,10 +36,14 @@ describe("TreasureChest", function() {
       expect(await treasureChest.buried()).to.equal(false);
     });
 
-    it('should revert if a non-captain tries to dig up the chest');
+    it('should revert if a non-captain tries to dig up the chest', async () => {
+      const [, , cabinBoySigner] = await ethers.getSigners();
+
+      await expect(treasureChest.connect(cabinBoySigner).unbury()).to.be.revertedWith('VM Exception while processing transaction: revert Ownable: caller is not the owner');
+    });
   });
 
-  describe.skip('open', () => {
+  describe('open', () => {
     it('should revert if still buried', async () => {
       await expect(treasureChest.open()).to.be.revertedWith('VM Exception while processing transaction: revert treasure chest has not been found yet');
     });
